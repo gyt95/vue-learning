@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>列表渲染即for循环</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- v-for -->
+	<!-- 
+		v-for 指令根据一组数组的选项列表进行渲染。 
+		v-for 指令需要以 item in items 形式的特殊语法。
+		items 是源数据数组并且 item 是数组元素迭代的别名。
+	 -->
+	<ul id="example-1">
+	 	<li v-for="item in items">
+	 		{{ item.message }}
+	 	</li>
+	</ul>
+	<script>
+	 	var example1 = new Vue({
+	 		el: '#example-1',
+	 		data: {
+	 			items:[
+	 				{message: 'Foo'},
+	 				{message: 'Bar'}	 				
+	 			]
+	 		}
+	 	});
+	 	//变异方法
+	 	console.log(example1.items.push({ message: 'kkkkzzz' }));
+	 	console.log(example1.items.unshift({ message: 'qqqq' }));
+	 	//console.log(example1.items.pop());
+	 	//console.log(example1.items.shift());
+
+	 	//非变异方法，例如： filter(), concat(), slice() 。
+
+	 	//下面例子用于过滤items数组的数据，匹配的字符串用"/"包住，返回符合括号中字符串的value值
+	 	// example1.items = example1.items.filter(function(item){
+	 	// 	return item.message.match(/Foo/);
+	 	// });
+
+	 	//利用索引直接设置一个项时，以下二选一
+	 	/*
+	 		VueObject.Array.splice(indexOfItem, 1, newValue) 
+	 		或 
+	 		Vue.set(VueObject.Array, indexOfItem, newValue)
+	 	*/
+
+	 	//从索引为2开始删除1个元素，再添加两个新元素
+	 	//example1.items.splice(2, 1, {message: 'vvv'}, {message: 'last..'});
+
+	 	//把源数据数组中索引为2的数据，更改为hahaha..
+	 	Vue.set(example1.items, 2, {message: 'hahaha..'});
+	</script>
+
+	<!-- 
+	 	在 v-for 块中，我们拥有对父作用域属性的完全访问权限。 
+	 	在 v-for 块中，还支持一个可选的第二个参数，作为当前项的索引。 
+	-->
+	<ul id="example-2">
+	 	<li v-for="(item, index) in items">
+	 		{{ parentMessage }} - {{ index }} - {{ item.message }}
+	 	</li>
+	</ul>
+	<script>
+	 	var example2 = new Vue({
+	 		el: '#example-2',
+	 		data:{
+	 			parentMessage: 'Parent',
+	 			items: [
+	 				{ message: 'Foo' },
+	 				{ message: 'Bar' }
+	 			]
+	 		}
+	 	});
+	</script>
+
+	<!-- <template>中 v-for，渲染多个元素块 -->
+	<ul>
+	 	<template v-for="item in items">
+	 		<li>{{ item.msg }}</li>
+	 		<li class="divider"></li>
+	 	</template>
+	</ul>
+
+
+	<!-- 对象迭代 v-for (下面通过对象object循环出其每个key的value值) -->
+	<ul id="repeat-object">
+		<li v-for="value in object"> 
+			{{ value }}
+		</li>
+	</ul>
+	<script>
+	 	new Vue({
+	 		el: '#repeat-object',
+	 		data: {
+	 			object: {
+	 				FirstName: 'John',
+	 				LastName: 'Doe',
+	 				Age: 30
+	 			}
+	 		}
+	 	});
+	</script>
+
+	<!-- 增加第二、第三个参数 -->
+	<div id="repeat-object2">
+		<li v-for="(value, key, index) in object">
+			索引： {{ index }} ，属性名：{{ key }}， 值：{{ value }}
+		</li>
+	</div>
+	<script>
+		new Vue({
+			el: '#repeat-object2',
+			data: {
+				object: {
+					FirstName: 'John',
+	 				LastName: 'Doe',
+	 				Age: 30
+				}
+			}
+		});
+	</script>
+
+
+	<!-- v-for整数迭代 -->
+	<div id="oDiv">
+		<h3>v-for整数迭代，在这种情况下，它将重复多次使用模板</h3>
+		<span v-for="n in 10">{{ n }}</span>
+	</div>
+	<script>
+		new Vue({
+			el: '#oDiv'
+		});
+	</script>
+
+
+	<!-- 组件和v-for(略) -->
+
+
+	<!-- key -->
+	<!-- 
+		为了给 Vue 一个提示，以便它能跟踪每个节点的身份，从而重用和重新排序现有元素，你需要为每项提供一个唯一 key 属性。
+		理想的 key 值是每项都有唯一 id。
+		你需要用 v-bind 来绑定动态值。
+	-->
+	<div v-for="item in items" v-bind:key="item.id">
+		<!-- 内容 -->
+	</div>
+
+	
+	<div class="testAll">	
+		<li v-for="n in evenNumbers">这是过滤掉奇数： {{ n }}</li>
+		<li v-for="n in sortNumbers">这是重排数组： {{ n }}</li>
+	</div>
+	<script>
+		new Vue({
+			el: '.testAll',
+			data: {
+			  numbers: [ 5, 2, 1, 7, 3 ]
+			},
+			computed: {
+				evenNumbers: function () {
+				    return this.numbers.filter(function (number) {
+				      return number % 2 === 0;
+				    });
+				},
+			  	sortNumbers: function () {
+			  		var newArr = [];
+			  		//console.log(this.numbers)
+			  		for(var i=0; i<this.numbers.length; i++){
+			  			for(var j=0; j<this.numbers.length; j++){
+			  				var cur = this.numbers[i];
+			  				if(cur < this.numbers[j]){
+			  					//将后一个数传给新变量
+			  					var k = this.numbers[j];
+			  					this.numbers[i] = k;
+			  					this.numbers[j] = cur;
+			  					//cur和k只负责存值并传递，两个this.numbers都是新的，都是用于获取新值
+
+			  					//因此两个this.numbers一定在左，cur和k一定在右
+			  				}
+			  			}
+			  		}
+			  		newArr.push(this.numbers);
+			  		return newArr;
+			  	}
+			  }
+			});
+	</script>
+</body>
+</html>

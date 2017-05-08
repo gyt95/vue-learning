@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>计算属性</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- 为了避免在模板内书写太复杂的运算导致模板过重且难以维护而使用的东东 -->
+
+	<!-- 对于任何复杂逻辑，你都应当使用计算属性 -->
+	
+
+
+	<!-- 不使用计算属性，模板内表达式会变得很复杂 -->
+	<!-- <div id="example">
+	  {{ message.split('').reverse().join('') }}
+	</div> -->
+	
+	<div id="example">
+		<p>原始信息为：{{ message }}</p>
+		<p>信息反转后：{{ reversedMessage }}</p>
+	</div>
+	<script>
+		var vm = new Vue({
+			el : '#example',
+			data:{
+				message : 'Hello'
+			},
+			computed:{
+				reversedMessage:function(){
+					return this.message.split('').reverse().join('');
+				}
+			}
+		});
+		//这里我们声明了一个计算属性 reversedMessage。我们提供的函数将用作属性 vm.reversedMessage 的 getter。
+
+		// Vue 知道 vm.reversedMessage 依赖于 vm.message ，因此当 vm.message 发生改变时，所有依赖于 vm.reversedMessage 的绑定也会更新。
+	</script>
+
+	<!-- 
+
+	问题：为何不用method，将函数定义为一个方法，而不是定义为计算属性。
+
+	区别：计算属性是基于它们的依赖进行缓存，只有在它的相关依赖发生改变，才会重新求值。
+
+	因此，只要message没发生改变，多次访问计算属性都会返回之前的计算结果，不用再执行函数 
+
+	-->
+
+	<!-- computed属性，用于数据需随其他数据变动而变动时 -->
+	<div id="demo">{{ fullName }}</div>
+	<script>
+		var vm = new Vue({
+		  el: '#demo',
+		  data: {
+		    firstName: 'Foo',
+		    lastName: 'Bar'
+		  },
+		  computed: {
+		    fullName: function () {
+		      return this.firstName + ' ' + this.lastName;
+		    }
+		  }
+		});
+	</script>
+</body>
+</html>

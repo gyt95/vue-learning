@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>条件渲染</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- v-if -->
+	<h1 v-if="ok">Yes</h1>
+	<h1 v-else>No</h1>
+
+	<!-- <template>中 v-if 条件组，用于切换多个元素 -->
+	<template v-if="ok">
+		<h1>标题</h1>
+		<p>段落1</p>
+		<p>段落2</p>
+	</template>
+
+	<!-- v-else -->
+	<div v-if="Math.random() > 0.5">
+		Now you see me 
+	</div>
+	<div v-else>
+		Now you can't
+	</div>
+
+	<!-- 2.1.0新增 v-else-if ，相当于else if -->
+	<div v-if="type === 'A' ">
+		A
+	</div>
+	<div v-else-if="type === 'B' ">
+		B
+	</div>
+	<div v-else-if="type === 'C' ">
+		C
+	</div>
+	<div v-else>
+		Not A or B or C
+	</div>
+
+	<!-- key管理可以复用的元素，使其无法被复用 -->
+	<!-- 两个模板用的是相同元素，输入的值不会因为切换而改变 -->
+	<!-- <template v-if="loginType === 'username' ">
+		<label>Username</label>
+		<input placeholder="Enter your username">
+	</template>
+	<template v-else>
+		<label>Email</label>
+		<input placeholder="Enter your email address">
+	</template> -->
+
+	<!-- key属性，代表唯一。Vue提供此方式声明“这两个元素完全独立，不可复用它们” -->
+	<template v-if="loginType === 'username' ">
+		<label>Username</label>
+		<input placeholder="Enter your username" key="username-input">
+	</template>
+	<template v-else>
+		<label>Email</label>
+		<input placeholder="Enter your email address" key="email-input">
+	</template>
+
+
+	<!-- v-show -->
+	<h1 v-show="ok">Hello!</h1>
+	<!-- 不同的是带有 v-show 的元素始终会被渲染并保留在 DOM 中。v-show 是简单地切换元素的 CSS 属性 display 。 -->
+</body>
+</html>
