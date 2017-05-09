@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件处理器</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- v-on -->
+
+	<!-- 监听事件 -->
+	<div id="example-1">
+		<button v-on:click="count += 1">click</button>
+		<p>{{ count }}</p>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-1',
+			data: {
+				count: 0
+			}
+		});
+	</script>
+
+
+	<!-- 方法事件处理器(调用某个方法) -->
+	<div id="example-2">
+		<button v-on:click="greet">click</button>
+		<p>{{ count }}</p>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-2',
+			data: {
+				count: 0
+			},
+			methods: {
+				greet: function(event){
+					this.count += 1;
+					console.log(event.target.tagName);
+					return this.count;
+				}
+			}
+		});
+	</script>
+
+
+	<!-- 内联处理器方法(调用方法时传参) -->
+	<div id="example-3">
+		<button v-on:click="say('hello')">click</button>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-3',
+			methods: {
+				say: function(msg){
+					alert(msg);
+				}
+			}
+		});
+	</script>
+
+
+	<!-- 事件修饰符 -->
+	<!-- 事件处理程序会调用方法去阻止事件冒泡，虽然能在methods实现，
+	但是为了让methods只负责纯粹的数据逻辑，不去处理DOM事件细节，
+	v-on提供了事件修饰符，通过“.”表示的指令后缀来调用修饰符 -->
+
+	<!-- 阻止单击事件冒泡 -->
+	<a v-on:click.stop="doThis"></a>
+	<!-- 提交事件不再重载页面 -->
+	<form v-on:submit.prevent="onSubmit"></form>
+	<!-- 修饰符可以串联（？） -->
+	<a v-on:click.stop.prevent="doThat"></a>
+	<!-- 只有修饰符（？） -->
+	<form v-on:submit.prevent></form>
+	<!-- 添加事件侦听器时使用事件捕获模式（？） -->
+	<div v-on:click.capture="doThis">...</div>
+	<!-- 只当事件在该元素本身（而不是子元素）触发时触发回调（？） -->
+	<div v-on:click.self="doThat">...</div>
+	<!-- 点击事件将只会触发一次 -->
+	<a v-on:click.once="doThis"></a>
+
+
+
+
+	<!-- 按键修饰符 -->
+	<!-- 只有在 keyCode 是 13 时调用 vm.submit() -->
+	<input v-on:keyup.13="submit">
+
+	<!-- Vue为最常用的按键提供别名 -->
+	<input v-on:keyup.enter="submit">
+	<input @keyup.enter="submit">
+	<!-- 
+		全部的按键别名：
+			.enter  .tab    .delete (捕获 “删除” 和 “退格” 键)
+			.esc    .space  .up
+			.down   .left   .right
+
+		2.1.0 新增
+		可以用如下修饰符开启鼠标或键盘事件监听，使在按键按下时发生响应。
+			.ctrl   .alt
+			.shift  .meta
+	-->
+	
+
+	<!-- Alt + C -->
+	<input @keyup.alt.67="clear">
+	<!-- Ctrl + Click -->
+	<div @click.ctrl="doSomething">Do something</div>
+
+
+	<!-- 
+
+	为什么在 HTML 中监听事件?（v-on好处）
+
+	你可能注意到这种事件监听的方式违背了关注点分离（separation of concern）传统理念。
+
+	不必担心，因为所有的 Vue.js 事件处理方法和表达式都严格绑定在当前视图的 ViewModel 上，它不会导致任何维护上的困难。
+
+	实际上，使用 v-on 有几个好处：
+	1.扫一眼 HTML 模板便能轻松定位在 JavaScript 代码里对应的方法。
+
+	2.因为你无须在 JavaScript 里手动绑定事件，
+	你的 ViewModel 代码可以是非常纯粹的逻辑，和 DOM 完全解耦，更易于测试。
+	（原来每次在script标签里new的就是ViewModel，的确只要你写逻辑，根本不用管获取DOM）
+
+	3.当一个 ViewModel 被销毁时，所有的事件处理器都会自动被删除。
+	你无须担心如何自己清理它们。
+
+	 -->
+</body>
+</html>
