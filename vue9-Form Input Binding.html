@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>表单控件绑定(主要就是那个v-model..)</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- v-model指令：可在表单控件元素上创建双向数据绑定 -->
+	<!-- 原理：根据控件类型，自动选取正确方法更新元素 -->
+	<!-- 本质：语法糖。负责监听用户的输入(事件)，来更新数据 -->
+
+	<!-- 文本 -->
+	<div id="example-1">
+		<input v-model="message" placeholder="edit me">
+		<p>Show your edit :{{ message }}</p>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-1',
+			data: {
+				message:''
+			}
+		});
+	</script>
+
+
+	<!-- 多行文本 -->
+	<div id="example-2">
+		<span>Multiline message is:</span>
+		<p style="width:600px;/*height:300px;/*overflow: scroll;">{{ message }}</p>
+		<textarea style="width:400px;height:200px;" v-model="message" placeholder="add multiline lines"></textarea>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-2',
+			data: {
+				message:''
+			}
+		});
+	</script>
+
+
+
+	<!-- 单个勾选框、复选框 -->
+	<div id="example-3">
+		<span>单个勾选框</span>
+		<input type="checkbox" id="checkbox" v-model="checked">
+		<label for="checkbox">{{ checked }}</label>
+		<!-- for属性即光标指向id与其值相同的input上 -->
+	</div>
+	<script>
+		new Vue({
+			el:'#example-3',
+			data:{
+				checked:false
+			}
+		});
+	</script>
+	<div id="example-4">
+		<span>复选框</span>
+		<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+		<label for="jack">Jack</label>
+		<input type="checkbox" id="ken" value="Ken" v-model="checkedNames">
+		<label for="ken">Ken</label>
+		<input type="checkbox" id="ben" value="Ben" v-model="checkedNames">
+		<label for="ben">Ben</label>
+		<br/>
+		<span>选中了这些：{{ checkedNames }}</span>
+		<br/><br/>
+	</div>
+	<script>
+		new Vue({
+			el:'#example-4',
+			data:{
+				checkedNames:[]
+			}
+		});
+	</script>
+
+
+	<!-- 单选框 -->
+	<div id="example-5" class="demo">
+		<h3>单选框</h3>
+		<input type="radio" id="one" value="One" v-model="picked">
+		<label for="one">One</label>
+		<br/>
+		<input type="radio" id="two" value="Two" v-model="picked">
+		<label for="two">Two</label>
+		<br/>
+		<span>这里会显示你所选的选项：{{ picked }}</span>
+	</div>
+	<script>
+		var vm5 = new Vue({
+			el: '#example-5',
+			data:{
+				picked:''
+			}
+		});
+		console.log(vm5.value);//undefined
+		console.log(vm5.picked === vm5.value);//false
+		//和绑定了value的单选框区别在于，后者的value值是在Vue实例里的，前者没定义在data中，因此vm5.value为undefined，是所谓的“静态”值
+	</script>
+
+
+	<!-- 选择列表 -->
+	<!-- 单选列表 -->
+	<div id="example-6" class="demo">
+		<h3>单选列表</h3>
+		<select v-model="selected">
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<span>被选中：{{ selected }} </span>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-6',
+			data:{
+				selected:null
+			}
+		});
+	</script>
+
+
+	<!-- 动态选项，v-for渲染 -->
+	<!-- for循环options数组所有元素，显示每个元素的text属性的值。绑定value属性 -->
+	<div id="example-7" class="demo">
+		<h3>动态单选列表</h3>
+		<select v-model="selected">
+			<option v-for="option in options" v-bind:value="option.value">
+				{{ option.text }}
+			</option>
+		</select>
+		<span>被选中：{{ selected }}</span>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-7',
+			data:{   
+				selected:'',
+				options:[   //注意！options是作为data中的数据
+					{ text:'One', value:'A' },
+					{ text:'Two', value:'B' },
+					{ text:'Three', value:'C' }
+				]
+			}
+		});
+	</script>
+
+
+
+	<!-- 多选列表（绑定到一个数组）-->
+
+	<!--不懂.....和上面单选列表有啥区别？？？？？ -->
+	<div id="example-8" class="demo">
+		<h3>多选列表</h3>
+		<select v-model="selected" multiple="multiple" style="width:50px">
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<span>被选中：{{ selected }} </span>
+	</div>
+	<script>
+		new Vue({
+			el: '#example-8',
+			data:{
+				selected:[]
+			}
+		});
+	</script>
+	
+
+	
+
+	<!-- 绑定value（不懂） -->
+
+
+	<!-- 对于单选按钮，勾选框及选择列表选项， v-model 绑定的 value 通常是静态字符串（对于勾选框是逻辑值） -->
+	<!-- 当选中时，`picked` 为字符串 "a" -->
+	<div id="x">注意了：
+	<input type="radio" v-model="picked" value="a">
+	<p>{{picked}}</p>
+	</div>
+	<script>
+		new Vue({
+			el:'#x',
+			data:{
+				picked:''
+			}
+		});
+	</script>
+
+	<!-- `toggle` 为 true 或 false -->
+	<div id="x1">注意了咯：
+	<input type="checkbox" v-model="toggle">
+	<p>{{toggle}}</p>
+	</div>
+	<script>
+		new Vue({
+			el:'#x1',
+			data:{
+				toggle:false
+			}
+		});
+	</script>
+
+	<!-- 当选中时，`selected` 为字符串 "abc" -->
+	<div id="x2">注意了啊：
+		<select v-model="selected">
+			<option value="abc">ABC</option>
+		</select>
+		<p>{{selected}}</p>
+	</div>
+	<script>
+		new Vue({
+			el:'#x2',
+			data:{
+				selected:''
+			}
+		});
+	</script>
+
+	<!-- 但是有时我们想绑定 value 到 Vue 实例的一个动态属性上，这时可以用 v-bind 实现，并且这个属性的值可以不是字符串。 -->
+
+
+	<!-- 复选框（自定义） -->
+	<div id="test3">
+		<!-- 原本代码如下，data中不含a和b，toggle显示的是true或false -->
+		<!-- <input type="checkbox" v-model="toggle"> -->
+
+		<!-- 更改后，toggle显示的是true或false分别对应a或b的data值 -->
+		<input
+		  type="checkbox"
+		  v-model="toggle"
+		  v-bind:true-value="a"
+		  v-bind:false-value="b"
+		>
+		<p>绑定value到Vue实例的动态属性：{{ toggle }}</p>
+	</div>
+	<script>
+		var vm2 = new Vue({
+			el:'#test3',
+			data:{
+					a:'a',
+					b:'b',
+					toggle:''
+			}
+		});
+		// 当选中时，控制台：
+		// vm2.toggle === vm2.a;
+		// 当没有选中时，控制台：（选中一次后取消才开始生效）
+		// vm2.toggle === vm2.b;
+		console.log('test3结束');
+	</script>
+
+
+
+	<!-- 单选按钮（不懂和单选框有何区别）（区别可能是绑定value后Vue实例里的data属性就多了a这么个动态属性，vm3.a变得有意义，但普通的单选框则没有这么做，因此是静态的 -->
+	<div id="test1">
+		<input type="radio" v-model="pick" v-bind:value="a">
+		<p>{{ pick }}</p>
+	</div>
+	<script>
+		var vm3 = new Vue({
+			el: '#test1',
+			data:{
+				a:'afjdskf',
+				pick:'..'
+			}
+		});
+		console.log(vm3.pick === vm3.a);//勾选前false，勾选后true
+	</script>
+	<!-- 当选中时，vm.pick === vm.a -->
+	<!-- 
+		当只有v-model的情况下，我们绑定了VUE实例中的pick这个数据，而这数据往往都是字符串或者是逻辑值。
+		而如今通过v-bind绑定value，意味着value是一个可变的数据 a,而不是字符串'a'。
+		而v-model在这个控件选定后的值就是指向value。
+		而用v-bind绑定后，指向的值又是一个动态属性。
+		所以此时就可以通过a这个动态属性来更改v-model绑定的值,其他的控件也是如此，比如select等 
+	-->
+
+
+	<!-- 选择列表设置 -->
+	<div id="test2">
+		<select v-model="selected">
+		    <!-- 内联对象字面量 -->
+			<option v-bind:value="{ number: 123 }">123</option>
+		</select>
+	</div>
+	<script>
+		var vm=new Vue({
+			el:'#test2',
+			data:{
+				selected:{
+					number:123
+				}
+			}
+		});
+		// 当选中时
+		console.log(typeof vm.selected); // -> 'object'
+		console.log(vm.selected.number); // -> 123
+	</script>
+
+
+	
+	<!-- 修饰符 -->
+	<!-- .lazy -->
+	<div id="test01">
+		<h3>.lazy修饰符</h3>
+		<input v-model.lazy="msg">
+		<p>据说能转变为在 change 事件中同步，即光标离开才会更新：{{msg}}</p>
+	</div>
+	<script>
+		var vm=new Vue({
+			el:'#test01',
+			data:{
+				msg:''
+			}
+		});
+	</script>
+
+	<!-- .number -->
+	<div id="test02">
+		<h3>.number修饰符</h3>
+		<input v-model.number="msg" type="number">
+		<p>据说能自动将输入值转为Number类型：{{msg}}</p>
+		<!-- 但如果原值的转换结果为NaN，则返回原值 -->
+	</div>
+	<script>
+		var vm=new Vue({
+			el:'#test02',
+			data:{
+				msg:''
+			}
+		});
+	</script>
+
+
+	<!-- .number -->
+	<div id="test03">
+		<h3>.trim修饰符(感觉没啥用...)</h3>
+		<input v-model.trim="msg">
+		<p>据说能自动过滤用户输入的首尾空格：{{msg}}</p>
+		<!-- 但如果原值的转换结果为NaN，则返回原值 -->
+	</div>
+	<script>
+		var vm=new Vue({
+			el:'#test03',
+			data:{
+				msg:''
+			}
+		});
+	</script>
+
+
+
+	<!-- v-model与组件(略) -->
+</body>
+</html>
