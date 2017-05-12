@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>构成组件及props</title>	
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+	<!-- 
+	组件意味协同工作。
+	父子组件关系：
+		组件A在模板中使用组件B
+	
+	父组件和子组件间通信：
+		父组件要传递数据给子组件(props down)，
+		子组件要将它内部发生的事情告诉父组件(events up)
+	-->
+
+	<!-- 1、使用Prop传递数据 -->
+	<!-- 组件实例作用域是孤立的（不懂）
+		因此不能在子组件模板内，直接引用，父组件的数据
+
+		这时就需要用到props选项
+	 -->
+	<div id="example1">
+	 	<child message="hello!!"></child>
+	</div>
+	<script>
+	 	Vue.component('child',{
+	 		props: ['message'],//用props选项声明子组件期待获得的数据
+
+	 		// 就像 data 一样，prop 可以用在模板内
+  			// 同样也可以在 vm 实例中像 “this.message” 这样使用
+
+	 		template: '<span>{{ message }}</span>'
+	 		//如果不是获取数据，就不需要用props来声明了，即字符串模板
+	 	});
+	 	new Vue({
+	 		el:'#example1'
+	 	});
+	</script>
+
+
+	<!-- 2、关于prop的命名，驼峰式与短横线隔开式 -->
+	<!-- 
+		驼峰用在props声明和模板中，短横用在html元素中
+
+		PS：字符串模板则无限制 
+	-->
+	<div id="example2">
+	 	<child my-message="MyGod!!"></child>
+	</div>
+	<script>
+	 	Vue.component('child',{
+	 		props: ['myMessage'],
+	 		template: '<span>{{ myMessage }}</span>'
+	 	});
+	 	new Vue({
+	 		el:'#example2'
+	 	});
+	</script>
+
+
+	<!-- 3、动态Prop，绑定父组件数据到子模版的props，用v-bind -->
+	<div id="example3">
+		<input v-model="parentMsg">
+		<br>
+		<child v-bind:my-message="parentMsg"></child>
+	</div>
+	<script>
+		Vue.component('child', {
+			props: ['myMessage'],
+			template: '<p>{{ myMessage }}</p>'		
+		});
+		new Vue({
+			el: '#example3',
+			data: {
+				parentMsg:''
+			}
+		});
+		/*
+			这里写错很多东西，稍微总结下。
+			1、凡是需要动态数据绑定，就用v-bind
+			2、凡是需要用到输入保存数据v-model
+			3、凡是用到v-model，其值都要写入Vue实例里的data选项中
+			4、、组件包含的是，子组件名child，大括号中的props选项，指的是子组件属性名，这里就是my-message，template用于结果显示
+			
+			5、注册一个组件 --> 组件中用props获取父组件数据 -->template制作模板显示该数据 -->创建Vue实例，挂载一个元素，需要输入数据就增加data选项
+		*/
+	</script>
+
+
+	<!-- 4、字面量语法&&动态语法 -->
+
+	<!--常见错误：使用字面量语法传递数值，如下代码，传递了一个字符串 "1" -->
+	<!-- <comp some-prop="1"></comp> -->
+	<!-- 因为它是一个字面 prop ，它的值是字符串 "1" 而不是number。-->
+
+
+	<!-- 如果想传递一个实际的number，需要使用 v-bind -->
+	<!-- 传递实际的 number -->
+	<!-- <comp v-bind:some-prop="1"></comp> -->
+
+
+
+
+	<!-- 单向数据流 -->
+	<!-- prop是单向绑定：
+		当父组件的属性变化时，将传导给子组件，但是不会反过来 -->
+
+	<!-- 注意了！！每次父组件更新值时，子组件所有prop都会更新到最新值，所以不能随便改子组件的prop，否则Vue弹出警告 -->
+
+
+</body>
+</html>
